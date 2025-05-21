@@ -32,11 +32,14 @@ if st.button("Submit"):
             response = requests.post(url, json=payload, headers=headers)
 
         # Handle response
-        if response.status_code == 200:
-            result = response.json()
-            reply = result.get("answer") or result.get("response") or "No reply received."
-            st.success("Bot's response:")
-            st.write(reply)
+       try:
+    result = response.json()
+    reply = result.get("answer") or result.get("response") or "No reply received."
+except ValueError:
+    reply = response.text  # fallback to raw text if not JSON
+
         else:
             st.error(f"An error occurred. Status code: {response.status_code}")
             st.write(response.text)
+st.success("Bot's response:")
+st.write(reply)
